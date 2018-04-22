@@ -5,7 +5,7 @@
 .STACK 4096
 
 .DATA
-N DWORD 0			; the Nth number in the sequence (USER INPUT)
+N DWORD 0               ; the Nth number in the sequence (USER INPUT)
 
 ; Assuming sequence like this:
 ; N:	0	1	2	3	4	5
@@ -22,8 +22,7 @@ main  PROC
 	je    CASE1
 	mov   ebx, 1
 
-	; While loop
-	WS:
+	WS:             ; While loop
 	cmp   N, 1
 	jl    DONE
 	xchg  eax, ebx
