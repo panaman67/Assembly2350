@@ -21,7 +21,7 @@ main:
 	mov  rax, 0
 	call printf
 
-	;mov  rdi, sfmt
+	lea  rdi, ans
 	;mov  rsi, ans
 
 	push DWORD 6
