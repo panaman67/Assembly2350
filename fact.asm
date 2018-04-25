@@ -5,11 +5,11 @@ SECTION .data
 
 	msg:  db "Hello! %d", 10, 0
 
-	menu: db "0: combonation", 10, "1: permutation", 0
+	menu: db "0: combonation", 10, "1: permutation", 10, 0
 
 	sfmt: db "%c", 0
 
-	ans:  dq 4
+	ans:  dq 0
 
 SECTION .text
 
@@ -20,14 +20,19 @@ main:
 	mov  rdi, menu
 	mov  rax, 0
 	call printf
-
-	; FIXME
-	mov  rdi, [ans]
-	mov  rsi, sfmt
+	
+	;lea    rsi,[rbp-0x1]
+	;mov    BYTE PTR [rbp-0x1],0x20
+	;mov    al,0x0
+	;call   400490 <__isoc99_scanf@plt>
+	;movabs rdi,0x400657
+	lea  rsi, [ans]
+	mov  QWORD [ans], 0x20
+	mov  rax, 0
 	call scanf
 
-	push DWORD 6
-
+	push QWORD [ans]
+	
 	call fact
 	mov  rsi, rax
 	mov  rax, 0
