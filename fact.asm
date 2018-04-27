@@ -3,31 +3,23 @@ extern scanf
 
 SECTION .data
 
-	msg:       db "Factorial: %ld", 10, 0
-
-	prompt:    db "What num to be factorialized: ", 0
-
-	sfmt:      db "%d", 0
-
-	menu:      db "0: combonation", 10, "1: permutation", 10, 0
-
-	ans:       dq 0
-
-	playagain: db "Play again: ", 0
-
-	again:     db 'n', 0
-
-	yes:       db 'y', 0
+	menu:      db  "0: combonation", 10, "1: permutation", 10, 0
+	prompt:    db  "What num to be factorialized: ", 0
+	playagain: db  "Play again: ", 0
+	sfmt:      db  "%d", 0
+	againfmt:  db  "%d", 0
+	testfmt    db  "You entered: %c",10, 0
+	ans:       dq  0
+	again:     db  ' ', 0 ; 121 = 'y'
+	msg:       db  "Factorial: %ld", 10, 0
 
 SECTION .text
 
-; THIS FUCKING WORKS!!!!!!!
 global main
 main:
 
    menustart:             ; Label for start of loop
 	mov  rdi, prompt  ; move the prompt to RDI (1st parameter loc)
-	;mov  rsi, 0
 	mov  rax, 0       ; needed to disable MMX instructions ?????
 	call printf       ; call extern printf proc
 	; printf("Enter num: ");
@@ -36,7 +28,7 @@ main:
 	mov  rsi, ans     ; move location of ans var to rsi
 	mov  rax, 0       ; needed to disable MMX????
 	call scanf        ; call scanf
-	; scanf("");
+	; scanf("%d", &ans);
 
 	push QWORD [ans]  ; push contents of ans to stack
 	call fact         ; call factorial function
@@ -45,17 +37,37 @@ main:
 	mov  rsi, rax
 	mov  rax, 0
 	call printf
+	; printf("Factorial: %d\n", rax /* fact(ans)*/);
+	mov  rdi, 0
 
-	mov  rdi, playagain ; prompt to ask to repeat
+	mov  rdi, playagain
+	mov  rax, 0
+	call printf
+	; printf("Play again: ");
+
+	mov  rdi, againfmt ; prompt to ask to repeat
 	mov  rsi, again
 	mov  rax, 0
 	call scanf
+	; scanf("%c", &again);
 
-	; FIXME	
-	cmp  BYTE [again], 'y'   ; for checking if we should loop back
-	jne  menustart
+
+	mov  rdi, testfmt
+	mov  rbx, again
+	mov  rsi, rbx
+	mov  rax, 0
+	call printf
+
+
+
+
+
+	; FIXME: This works with format %d and cmp with ascii code values,
+	;        but not with %c and character literals :(
+	;cmp  BYTE [again], BYTE 121   ; for checking if we should loop back
+	;je   menustart
 	mov  eax, 1    ; 1 is code for exit
-	int  80h
+	int  0x80
 
 ; Returns factorial of pushed num
 fact:
@@ -77,5 +89,3 @@ fact:
 	mov  rsp, rbp
 	pop  rbp
 	ret
-	
-	
