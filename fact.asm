@@ -3,14 +3,14 @@ extern scanf
 
 SECTION .data
 
-	menu:      db  "0: combonation", 10, "1: permutation", 10, 0
+	;menu:      db  "0: combonation", 10, "1: permutation", 10, 0
 	prompt:    db  "What num to be factorialized: ", 0
 	playagain: db  "Play again: ", 0
-	sfmt:      db  "%d", 0
-	againfmt:  db  "%d", 0
-	testfmt    db  "You entered: %c",10, 0
+	factfmt:   db  "%d", 0
+	againfmt:  db  "%s", 0
+	testfmt    db  "You entered: %s", 10, 0
 	ans:       dq  0
-	again:     db  ' ', 0 ; 121 = 'y'
+	again:     db  ' ', 0
 	msg:       db  "Factorial: %ld", 10, 0
 
 SECTION .text
@@ -24,7 +24,7 @@ main:
 	call printf       ; call extern printf proc
 	; printf("Enter num: ");
 	
-	mov  rdi, sfmt    ; move input format to rdi
+	mov  rdi, factfmt ; move input format to rdi
 	mov  rsi, ans     ; move location of ans var to rsi
 	mov  rax, 0       ; needed to disable MMX????
 	call scanf        ; call scanf
@@ -53,17 +53,12 @@ main:
 
 
 	mov  rdi, testfmt
-	mov  rbx, again
-	mov  rsi, rbx
+	mov  rsi, again
 	mov  rax, 0
 	call printf
+	; printf("You entered: %c\n", again);
 
 
-
-
-
-	; FIXME: This works with format %d and cmp with ascii code values,
-	;        but not with %c and character literals :(
 	;cmp  BYTE [again], BYTE 121   ; for checking if we should loop back
 	;je   menustart
 	mov  eax, 1    ; 1 is code for exit
