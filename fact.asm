@@ -20,12 +20,12 @@ SECTION .data
 	playagain: db  "Play again: ", 0
 	factfmt:   db  "%d", 0
 	againfmt:  db  "%s", 0
-	testfmt    db  "You entered: %s", 10, 0
+	testfmt:   db  "You entered: %s", 10, 0
 	ans:       dq  0
 	ans2:      dq  0
 	again:     db  "", 0
 	msg:       db  "Factorial: %ld", 10, 0
-	yesString  db  "yes", 0
+	yesString: db  "yes", 0
 
 SECTION .text
 
