@@ -15,6 +15,9 @@ extern scanf
 
 SECTION .data
 
+	N:         dq  0
+	R:         dq  0
+
 	menu:      db  "0: combonation", 10, "1: permutation", 10, 0
 	prompt:    db  "What num to be factorialized: ", 0
 	playagain: db  "Play again: ", 0
@@ -23,12 +26,9 @@ SECTION .data
 	testfmt:   db  "You entered: %s", 10, 0
 	ans:       dq  0
 	ans2:      dq  0
-	again:     db  "", 0
+	again:     db  "   ", 0
 	msg:       db  "Factorial: %ld", 10, 0
 	yesString: db  "yes", 0
-
-SECTION .bss
-	againAnswer: RESB 255
 
 SECTION .text
 
@@ -86,8 +86,6 @@ main:
 	lea   rdi, [yesString]
 	mov   rcx, 4
 	rep   cmpsb
-	mov   rax, 4
-	mov   rbx, 1
 	jne   out
 	
     stringsMatch:
@@ -126,17 +124,17 @@ combo:
 	mov  rcx, [rbp + 24] ; r
 	push rdx             ; push n
 	call fact            ; call func
+	pop  rax             ; pop n (rdx) into rax
 	mov  r15, rax        ; move n! to rdx
 	
 	push rcx
 	call fact
-;-------------BEFORE THIS WORKS------------------------------------
+	pop  rax
 	mov  r12, rax         ; move r! to r12
 
-	sub  rdx, rcx         ; (n-r)
-	mov  rax, rdx     ; TEMPORARY!!!!!
-;-------^^^^^^^^^^^^^---------- DOESNT WORK!!!!! eg saying 5-2 = 0
-;       N (rdx) is getting erased by this point....
+	sub  r15, r12         ; (n-r)
+	; mov  rax, r15     ; TEMPORARY!!!!!
+;-------------BEFORE THIS WORKS------------------------------------
 ;
 ;	push rbx
 ;	call fact
