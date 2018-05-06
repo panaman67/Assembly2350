@@ -27,6 +27,9 @@ SECTION .data
 	msg:       db  "Factorial: %ld", 10, 0
 	yesString: db  "yes", 0
 
+SECTION .bss
+	againAnswer: RESB 255
+
 SECTION .text
 
 global main
@@ -78,20 +81,18 @@ main:
 	call  scanf
 	; scanf("%c", &again);
 
-	;mov   rdi, testfmt
-	;mov   rsi, again
-	;mov   rax, 0
-	;call printf
-	; printf("You entered: %c\n", again);
-
 	; compare string code
-	mov   rdi, yesString
-	;mov   rcx, 4
+	lea   rsi, [again]
+	lea   rdi, [yesString]
+	mov   rcx, 4
+	rep   cmpsb
+	mov   rax, 4
+	mov   rbx, 1
+	jne   out
 	
-	cld
-	repe  cmpsb
-	;jne   out
-	jmp   menustart
+    stringsMatch:
+	jmp menustart
+
     out:
 	mov   eax, 1    ; 1 is code for exit
 	int   0x80
@@ -119,24 +120,33 @@ fact:
 
 combo:
 	push rbp
-	mov  rbp, rsp
-	mov  rbx, [rbp + 16] ; n
+	mov  rbp, rsp        ; Stack frame
+
+	mov  rdx, [rbp + 16] ; n
 	mov  rcx, [rbp + 24] ; r
-	push rbx             ; push n
+	push rdx             ; push n
 	call fact            ; call func
-	mov  rdx, rax        ; move n! to rdx
+	mov  r15, rax        ; move n! to rdx
+	
 	push rcx
 	call fact
-	mov  r9, rax         ; move r! to r9
-	sub  rbx, rcx        ; (n-r)
-	push rbx
-	call fact
-	mov  r10, rax        ; move (n-r)! to r10
-	mov  rax, r9         ; move r! to rax
-	mul  r10             ; r!(n-r)! to rax
-	mov  r11, rax        ; move above to r11
-	mov  rax, r9         ; move r! to rax
-	div  r11             ; do division, result is in rax
+;-------------BEFORE THIS WORKS------------------------------------
+	mov  r12, rax         ; move r! to r12
+
+	sub  rdx, rcx         ; (n-r)
+	mov  rax, rdx     ; TEMPORARY!!!!!
+;-------^^^^^^^^^^^^^---------- DOESNT WORK!!!!! eg saying 5-2 = 0
+;       N (rdx) is getting erased by this point....
+;
+;	push rbx
+;	call fact
+;	mov  r13, rax        ; move (n-r)! to r10
+;
+;	mov  rax, r12         ; move r! to rax
+;	mul  r13             ; r!(n-r)! to rax
+;	mov  r14, rax        ; move above to r11
+;	mov  rax, r12         ; move r! to rax
+;	div  r14             ; do division, result is in rax
 	mov  rsp, rbp
 	pop  rbp
 	ret
