@@ -15,20 +15,16 @@ extern scanf
 
 SECTION .data
 
-	N:         dq  0
-	R:         dq  0
-	NmR:       dq  0
-
 	menu:      db  "0: combonation", 10, "1: permutation", 10, 0
-	prompt:    db  "What num to be factorialized: ", 0
+	promptN:   db  "Enter N value: ", 0
+	promptR:   db  "Enter R value: ", 0
 	playagain: db  "Play again: ", 0
 	factfmt:   db  "%d", 0
 	againfmt:  db  "%s", 0
-	testfmt:   db  "You entered: %s", 10, 0
-	ans:       dq  0
-	ans2:      dq  0
+	N:         dq  0
+	R:         dq  0
 	again:     db  "   ", 0
-	msg:       db  "Factorial: %ld", 10, 0
+	comboMsg:  db  "nCr: %ld", 10, 0
 	yesString: db  "yes", 0
 
 SECTION .text
@@ -37,35 +33,35 @@ global main
 main:
 
    menustart:              ; Label for start of loop
-	mov   rdi, prompt  ; move the prompt to RDI (1st parameter loc)
+	mov   rdi, promptN ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
 	mov   rax, 0       ; needed to disable MMX instructions ?????
 	call  printf       ; call extern printf proc
 	; printf("Enter num: ");
 	
 	mov   rdi, factfmt ; move input format to rdi
-	mov   rsi, ans     ; move location of ans var to rsi
+	mov   rsi, N       ; move location of ans var to rsi
 	mov   rax, 0       ; needed to disable MMX????
 	call  scanf        ; call scanf
 	; scanf("%d", &ans);
 ;-------------------------------------------------------------------------------
-	mov   rdi, prompt  ; move the prompt to RDI (1st parameter loc)
+	mov   rdi, promptR ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
 	mov   rax, 0       ; needed to disable MMX instructions ?????
 	call  printf       ; call extern printf proc
 	; printf("Enter num: ");
 	
 	mov   rdi, factfmt ; move input format to rdi
-	mov   rsi, ans2     ; move location of ans var to rsi
+	mov   rsi, R       ; move location of ans var to rsi
 	mov   rax, 0       ; needed to disable MMX????
 	call  scanf        ; call scanf
 	; scanf("%d", &ans);
 ;----------------------------------------------------------------------------------
-	push  QWORD [ans2]  ; push contents of ans to stack
-	push  QWORD [ans]
+	push  QWORD [R]  ; push contents of ans to stack
+	push  QWORD [N]
 	call  combo         ; call factorial function
 
-	mov   rdi, msg     ; printf stuff for factorial answer
+	mov   rdi, comboMsg     ; printf stuff for factorial answer
 	mov   rsi, rax
 	mov   rax, 0
 	call  printf
@@ -126,7 +122,7 @@ combo:
 
 	push r14             ; push n
 	call fact            ; call func
-	mov  rdx, rax        ; move n! to rdx
+	mov  r15, rax        ; move n! to r15
 	pop  r14             ; pop n (rdx) into rdx
 	
 	push rcx
@@ -140,12 +136,12 @@ combo:
 	call fact
 	pop  r14
 	mov  r13, rax        ; move (n-r)! to r13
+	mov  rax, r12        ; move r! to rax
+	mul  r13             ; r!(n-r)! to rax
 ;-------------BEFORE THIS WORKS------------------------------------
-;	mov  rax, r12        ; move r! to rax
-;	mul  r13             ; r!(n-r)! to rax
-;	mov  r14, rax        ; move above to r11
-;	mov  rax, r12        ; move r! to rax
-;	div  r14             ; do division, result is in rax
+	mov  r14, rax        ; move r!(n-r)! to r14 (overwrites n)
+	mov  rax, r15        ; move n! to rax
+	div  r14             ; do division, result is in rax
 	mov  rsp, rbp
 	pop  rbp
 	ret
