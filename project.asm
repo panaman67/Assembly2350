@@ -68,13 +68,13 @@ main:
 	mov   rax, 0            ; needed to disable MMX????
 	call  scanf             ; call scanf
 
-	push  QWORD [num]
-	call  fact
-	mov   rsi, rax
+	push  QWORD [num]       ; Push num to stack
+	call  fact              ; call factorial function
+	mov   rsi, rax          ; set up print statement
 	mov   rdi, factMsg
 	mov   rax, 0
-	call  printf     ; THIS NO WORK WHY THOUGH?????
-	jmp   restart
+	call  printf
+	jmp   restart           ; jump to restart
 
 
     combostart:
@@ -255,7 +255,6 @@ permu:
 	pop  r14
 
 	mov  r13, rax        ; move (n-r)! to r13
-;-------------BEFORE THIS WORKS------------------------------------
 	mov  rax, r15        ; move n! to rax
 	div  r13             ; do division, result is in rax
 	mov  rsp, rbp
