@@ -24,6 +24,7 @@ SECTION .data
 	stringfmt: db  "%s", 0
 	N:         dq  0
 	R:         dq  0
+	num:       dq  0
 	choice:    db  0
 	again:     db  "   ", 0
 	comboMsg:  db  "nCr: %ld", 10, 0
@@ -63,11 +64,11 @@ main:
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
-	mov   rsi, choice       ; move location of ans var to rsi
+	mov   rsi, num          ; move location of ans var to rsi
 	mov   rax, 0            ; needed to disable MMX????
 	call  scanf             ; call scanf
 
-	push  QWORD [choice]
+	push  QWORD [num]
 	call  fact
 	mov   rsi, rax
 	mov   rdi, factMsg
