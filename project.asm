@@ -110,7 +110,7 @@ main:
 	mov   rsi, rax
 	mov   rax, 0
 	call  printf
-	; printf("Factorial: %d\n", rax /* fact(ans)*/);
+	; printf("nCr: %ld\n", combo(N,R));
 	jmp   restart
 
     permstart:
