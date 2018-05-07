@@ -17,6 +17,7 @@ SECTION .data
 
 	N:         dq  0
 	R:         dq  0
+	NmR:       dq  0
 
 	menu:      db  "0: combonation", 10, "1: permutation", 10, 0
 	prompt:    db  "What num to be factorialized: ", 0
@@ -120,30 +121,30 @@ combo:
 	push rbp
 	mov  rbp, rsp        ; Stack frame
 
-	mov  rdx, [rbp + 16] ; n
+	mov  r14, [rbp + 16] ; n
 	mov  rcx, [rbp + 24] ; r
-	push rdx             ; push n
+
+	push r14             ; push n
 	call fact            ; call func
-	pop  rax             ; pop n (rdx) into rax
-	mov  r15, rax        ; move n! to rdx
+	mov  rdx, rax        ; move n! to rdx
+	pop  r14             ; pop n (rdx) into rdx
 	
 	push rcx
 	call fact
-	pop  rax
-	mov  r12, rax         ; move r! to r12
+	pop  rcx
+	mov  r12, rax        ; move r! to r12
 
-	sub  r15, r12         ; (n-r)
-	; mov  rax, r15     ; TEMPORARY!!!!!
+	sub  r14, rcx        ; (n-r) in r15
+
+	push r14             ; (n-r)! call
+	call fact
+	pop  r14
+	mov  r13, rax        ; move (n-r)! to r13
 ;-------------BEFORE THIS WORKS------------------------------------
-;
-;	push rbx
-;	call fact
-;	mov  r13, rax        ; move (n-r)! to r10
-;
-;	mov  rax, r12         ; move r! to rax
+;	mov  rax, r12        ; move r! to rax
 ;	mul  r13             ; r!(n-r)! to rax
 ;	mov  r14, rax        ; move above to r11
-;	mov  rax, r12         ; move r! to rax
+;	mov  rax, r12        ; move r! to rax
 ;	div  r14             ; do division, result is in rax
 	mov  rsp, rbp
 	pop  rbp
