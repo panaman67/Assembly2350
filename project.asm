@@ -43,7 +43,6 @@ main:
 	mov   rsi, 0
 	mov   rax, 0
 	call  printf
-	; printf("0: combo\n1:perm")
 
 	mov   rdi, numfmt
 	mov   rsi, choice
@@ -51,21 +50,21 @@ main:
 	call  scanf
 	; scanf("%d", &choice)
 
-	cmp   BYTE [choice], 1
+	cmp   BYTE [choice], 1  ; Compare user input to decide what function to run
 	je    combostart
 	jg    permstart
 	jl    factstart
 
-    factstart:
+    factstart:                  ; function for input and output of factorial
 	
 	mov   rdi, promptNum    ; move the prompt to RDI (1st parameter loc)
-	mov   rax, 0            ; needed to disable MMX instructions ?????
+	mov   rax, 0
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, num          ; move location of ans var to rsi
-	mov   rax, 0            ; needed to disable MMX????
+	mov   rax, 0
 	call  scanf             ; call scanf
 
 	push  QWORD [num]       ; Push num to stack
@@ -80,33 +79,33 @@ main:
     combostart:
 	mov   rdi, promptN      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0            ; needed to disable MMX instructions ?????
+	mov   rax, 0
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
-	mov   rsi, N            ; move location of ans var to rsi
-	mov   rax, 0            ; needed to disable MMX????
+	mov   rsi, N            ; move location of N var to rsi
+	mov   rax, 0
 	call  scanf             ; call scanf
 	; scanf("%d", &ans)
 
 	mov   rdi, promptR      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0            ; needed to disable MMX instructions ?????
+	mov   rax, 0
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
-	mov   rsi, R            ; move location of ans var to rsi
-	mov   rax, 0            ; needed to disable MMX????
+	mov   rsi, R            ; move location of R var to rsi
+	mov   rax, 0
 	call  scanf             ; call scanf
 	; scanf("%d", &ans)
 
-	push  QWORD [R]         ; push contents of ans to stack
-	push  QWORD [N]
+	push  QWORD [R]         ; push contents of R to stack
+	push  QWORD [N]         ; push contents of N to stack
 	call  combo             ; call combo function
 
-	mov   rdi, comboMsg     ; printf stuff for factorial answer
+	mov   rdi, comboMsg     ; printf stuff for combonation answer
 	mov   rsi, rax
 	mov   rax, 0
 	call  printf
@@ -117,45 +116,45 @@ main:
 
 	mov   rdi, promptN      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0            ; needed to disable MMX instructions ?????
+	mov   rax, 0
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
-	mov   rsi, N            ; move location of ans var to rsi
-	mov   rax, 0            ; needed to disable MMX????
+	mov   rsi, N            ; move location of N var to rsi
+	mov   rax, 0
 	call  scanf             ; call scanf
-	; scanf("%d", &ans)
+	; scanf("%d", &N)
 
 	mov   rdi, promptR      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0            ; needed to disable MMX instructions ?????
+	mov   rax, 0
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ");
 	
 	mov   rdi, numfmt       ; move input format to rdi
-	mov   rsi, R            ; move location of ans var to rsi
-	mov   rax, 0            ; needed to disable MMX????
+	mov   rsi, R            ; move location of R var to rsi
+	mov   rax, 0
 	call  scanf             ; call scanf
-	; scanf("%d", &ans)
+	; scanf("%d", &R)
 
 	push  QWORD [R]         ; push contents of ans to stack
 	push  QWORD [N]
 	call  permu             ; call factorial function
 
-	mov   rdi, permMsg      ; printf stuff for factorial answer
+	mov   rdi, permMsg      ; printf stuff for permutation answer
 	mov   rsi, rax
 	mov   rax, 0
 	call  printf
-	; printf("Factorial: %d\n", rax /* fact(ans)*/);
+	; printf("nPr: %d", perm(N,R));
 
     restart:
-	mov   rdi, playagain
+	mov   rdi, playagain     ; prompt user if they want to play again
 	mov   rax, 0
 	call  printf
 	; printf("Play again: ");
 
-	mov   rdi, stringfmt     ; prompt to ask to repeat
+	mov   rdi, stringfmt     ; getting input
 	mov   rsi, again
 	mov   rax, 0
 	call  scanf
@@ -172,8 +171,8 @@ main:
 	jmp menustart
 
     out:
-	mov   eax, 1    ; 1 is code for exit
-	int   0x80
+	mov   eax, 1    ; 1 is code for exit (Tested in Linux)
+	int   0x80      ; call kernel
 
 ; Returns factorial of pushed num
 fact:
@@ -241,14 +240,14 @@ permu:
 	push r14             ; push n
 	call fact            ; call func
 	mov  r15, rax        ; move n! to r15
-	pop  r14             ; pop n (rdx) into rdx
+	pop  r14             ; pop n into r14
 	
 	push rcx
 	call fact
 	pop  rcx
 	mov  r12, rax        ; move r! to r12
 
-	sub  r14, rcx        ; (n-r) in r15
+	sub  r14, rcx        ; (n-r) in r14
 
 	push r14             ; (n-r)! call
 	call fact
@@ -257,6 +256,6 @@ permu:
 	mov  r13, rax        ; move (n-r)! to r13
 	mov  rax, r15        ; move n! to rax
 	div  r13             ; do division, result is in rax
-	mov  rsp, rbp
+	mov  rsp, rbp        ; restore stack frame before exit
 	pop  rbp
 	ret
