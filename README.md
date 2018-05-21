@@ -1,5 +1,5 @@
 # Assembly2350
-x86 assembly language in MASM/NASM for TTU assembly class
+x86/x64 assembly language in MASM/NASM for TTU assembly class
 
 Project.asm instructions:
 Create an assembly program that will calculate a user's choice of either combination orpermutation.
