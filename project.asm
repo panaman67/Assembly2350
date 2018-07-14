@@ -9,13 +9,12 @@
 ; -If they enter "yes" (not just 'y') they should be able to continue.
 ; -Otherwise, the program should exit
 
-
 extern printf
 extern scanf
 
 SECTION .data
 
-	menu:      db  "0: Factorial", 10, "1: combonation", 10, "2: permutation", 10, "Choice: ", 0
+	menu:      db  "0: Factorial", 10, "1: Combonation", 10, "2: Permutation", 10, "Choice: ", 0
 	promptN:   db  "Enter N value: ", 0
 	promptR:   db  "Enter R value: ", 0
 	promptNum  db  "Enter number: ", 0
@@ -32,6 +31,8 @@ SECTION .data
 	factMsg:   db  "Factorial: %ld", 10, 0
 	yesString: db  "yes", 0
 
+	temp:      db  "TESTING", 10
+
 SECTION .text
 
 global main
@@ -39,14 +40,18 @@ main:
 
    menustart:              ; Label for start of loop
 
-	mov   rdi, menu
-	mov   rsi, 0
-	mov   rax, 0
+	;mov   rdi, stringfmt
+	;mov   rsi, menu
+	;xor   rax, rax
+	;call  printf
+	lea   rdi, [stringfmt]
+	lea   rsi, [menu]
+	xor   rax, rax
 	call  printf
 
 	mov   rdi, numfmt
 	mov   rsi, choice
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf
 	; scanf("%d", &choice)
 
@@ -58,20 +63,20 @@ main:
     factstart:                  ; function for input and output of factorial
 	
 	mov   rdi, promptNum    ; move the prompt to RDI (1st parameter loc)
-	mov   rax, 0
+	xor   rax, rax
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, num          ; move location of ans var to rsi
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf             ; call scanf
 
 	push  QWORD [num]       ; Push num to stack
 	call  fact              ; call factorial function
 	mov   rsi, rax          ; set up print statement
 	mov   rdi, factMsg
-	mov   rax, 0
+	xor   rax, rax
 	call  printf
 	jmp   restart           ; jump to restart
 
@@ -79,25 +84,25 @@ main:
     combostart:
 	mov   rdi, promptN      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0
+	xor   rax, rax
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, N            ; move location of N var to rsi
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf             ; call scanf
 	; scanf("%d", &ans)
 
 	mov   rdi, promptR      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0
+	xor   rax, rax
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, R            ; move location of R var to rsi
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf             ; call scanf
 	; scanf("%d", &ans)
 
@@ -107,7 +112,7 @@ main:
 
 	mov   rdi, comboMsg     ; printf stuff for combonation answer
 	mov   rsi, rax
-	mov   rax, 0
+	xor   rax, rax
 	call  printf
 	; printf("nCr: %ld\n", combo(N,R));
 	jmp   restart
@@ -116,25 +121,25 @@ main:
 
 	mov   rdi, promptN      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0
+	xor   rax, rax
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ")
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, N            ; move location of N var to rsi
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf             ; call scanf
 	; scanf("%d", &N)
 
 	mov   rdi, promptR      ; move the prompt to RDI (1st parameter loc)
 	mov   rsi, 0
-	mov   rax, 0
+	xor   rax, rax
 	call  printf            ; call extern printf proc
 	; printf("Enter num: ");
 	
 	mov   rdi, numfmt       ; move input format to rdi
 	mov   rsi, R            ; move location of R var to rsi
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf             ; call scanf
 	; scanf("%d", &R)
 
@@ -144,19 +149,19 @@ main:
 
 	mov   rdi, permMsg      ; printf stuff for permutation answer
 	mov   rsi, rax
-	mov   rax, 0
+	xor   rax, rax
 	call  printf
 	; printf("nPr: %d", perm(N,R));
 
     restart:
 	mov   rdi, playagain     ; prompt user if they want to play again
-	mov   rax, 0
+	xor   rax, rax
 	call  printf
 	; printf("Play again: ");
 
 	mov   rdi, stringfmt     ; getting input
 	mov   rsi, again
-	mov   rax, 0
+	xor   rax, rax
 	call  scanf
 	; scanf("%s", &again);
 
