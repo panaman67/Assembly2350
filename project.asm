@@ -10,6 +10,7 @@
 ; -Otherwise, the program should exit
 
 extern printf
+extern puts
 extern scanf
 
 SECTION .data
@@ -30,24 +31,22 @@ SECTION .data
 	permMsg:   db  "nPr: %ld", 10, 0
 	factMsg:   db  "Factorial: %ld", 10, 0
 	yesString: db  "yes", 0
-
-	temp:      db  "TESTING", 10
+	;temp:      db  "TESTING", 10
 
 SECTION .text
 
 global main
+
 main:
 
    menustart:              ; Label for start of loop
 
-	;mov   rdi, stringfmt
-	;mov   rsi, menu
-	;xor   rax, rax
-	;call  printf
-	lea   rdi, [stringfmt]
-	lea   rsi, [menu]
+	mov   rdi, stringfmt
+	mov   rsi, menu
 	xor   rax, rax
 	call  printf
+	;mov   rdi, menu
+	;call  puts   ; printf segfault, solution is puts
 
 	mov   rdi, numfmt
 	mov   rsi, choice
